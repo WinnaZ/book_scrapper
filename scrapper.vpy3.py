@@ -5,14 +5,14 @@ try:
     import urllib.request as urllib_request
 except ImportError:
     import urllib2 as urllib_request
+
 from bs4 import BeautifulSoup
 from builtins import input
 
 book = ""
 
 #asks for the url of the book
-# quote_page = input("Insert the URL on the fisrt page, example:'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html': \n")
-quote_page = 'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html'
+quote_page = input("Insert the URL on the fisrt page, example:'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html': \n")
 
 #parses the url to get information out
 url = urllib_request.urlparse(quote_page)
@@ -52,9 +52,11 @@ for n in range(page_1, total_pages+1):
     name_box = soup.find('div', attrs={'class': "chapter-content-p"})
 
     clean_text = name_box.text.strip() # strip() is used to remove starting and trailing
+    print(type(clean_text))
     
     #apends page into .txt file
     file = open('books/'+name_of_book+'.txt', 'a')
+    # clean_text = clean_text.encode('utf-8')
     file.write(clean_text)
     file.close
     
