@@ -1,15 +1,21 @@
+# -*- coding=utf-8 -*-
 # import libraries
-from urllib2 import urlopen, Request , urlparse
+from __future__ import print_function
+try:
+    import urllib.request as urllib_request
+except ImportError:
+    import urllib2 as urllib_request
 from bs4 import BeautifulSoup
-from urlparse import urlparse
+from builtins import input
 
 book = ""
 
 #asks for the url of the book
-quote_page = raw_input("Insert the URL on the fisrt page, example:'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html': \n")
+# quote_page = input("Insert the URL on the fisrt page, example:'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html': \n")
+quote_page = 'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html'
 
 #parses the url to get information out
-url = urlparse(quote_page)
+url = urllib_request.urlparse(quote_page)
 data = url.path.split("/")
 
 #get the book name out of data
@@ -21,9 +27,9 @@ info = (data[2].replace(".html","")).split("-")
 hash_number = int(info[2]) -1
 page_1 = int(info[1])
 
-total_pages = int(raw_input("Insert the total of pages:"))
+total_pages = int(input("Insert the total of pages:"))
 
-print "Downloading " + (name_of_book.replace("-"," ")).title()
+print("Downloading {}".format((name_of_book.replace("-"," ")).title()))
 
 for n in range(page_1, total_pages+1):
     hash_number= hash_number + 1
@@ -36,8 +42,8 @@ for n in range(page_1, total_pages+1):
         }
 
     # query the website and return the html to the variable page
-    req = Request(quote_page, headers=hdr)
-    page = urlopen(req)
+    req = urllib_request.Request(quote_page, headers=hdr)
+    page = urllib_request.urlopen(req)
  
     # parse the html using beautiful soup and store in variable soup
     soup = BeautifulSoup(page, 'html.parser')
@@ -49,11 +55,10 @@ for n in range(page_1, total_pages+1):
     
     #apends page into .txt file
     file = open('books/'+name_of_book+'.txt', 'a')
-    clean_text = clean_text.encode('utf-8')
     file.write(clean_text)
     file.close
     
-    print "Page......", n 
-print "Done! file saved as", name_of_book+'.txt'
+    print("Page...... {}".format(n)) 
+print("Done! file saved as {}.txt".format(name_of_book))
 
 
