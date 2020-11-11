@@ -17,22 +17,14 @@ quote_page = input("Insert the URL on the fisrt page, example:'https://novel22.n
 url = urllib_request.urlparse(quote_page)
 data = url.path.split("/")
 
-try:
-    #This url is not as generic as i would like,
-    # the info will need to be reajusted depending on each url
+#get the book name out of data
+name_of_book = data[1]
 
-    #get the book name out of data
-    name_of_book = data[1]
+#gets the important numbers of the url
+info = (data[2].replace(".html","")).split("-")
 
-    #gets the important numbers of the url
-    info = (data[2].replace(".html","")).split("-")
-
-    hash_number = int(info[2]) -1
-    page_1 = int(info[1])
-except IndexError as e:
-    print('FATAL ERROR:',e)
-    print('Check the url it probably needs an index adjustment')
-    exit()
+hash_number = int(info[-1]) -1
+page_1 = 1
 
 total_pages = int(input("Insert the total of pages:"))
 
@@ -42,7 +34,6 @@ for n in range(page_1, total_pages+1):
     hash_number= hash_number + 1
     
     quote_page = url.scheme + "://" + url.netloc + "/" + name_of_book + "/page-" + str(n) + "-" + str(hash_number) +".html"  
-
 
     hdr = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'User-Agent':'Mozilla/5.0'
@@ -56,13 +47,23 @@ for n in range(page_1, total_pages+1):
     soup = BeautifulSoup(page, 'html.parser')
  
     # Take out the <div> of name and get its value
-    name_box = soup.find('div', attrs={'class': "chapter-content-p"})
     
-    clean_text = name_box.text.strip() # strip() is used to remove starting and trailing
+    chapter_content = soup.find('div', attrs={'class': "chapter-content-p"})
+
+    clean_title =''
+    if len(info) >3:
+        title = soup.find('title')
+        clean_title = title.text.strip() # strip() is used to remove starting and trailing
+        clean_title = clean_title.replace(':','')
+        clean_title = clean_title.replace((name_of_book.replace("-"," ")).title(),'\r\n\n')
+        clean_title = clean_title.replace('- Novel22','\n\n\n')
+
+    clean_text = chapter_content.text.strip() # strip() is used to remove starting and trailing
     clean_text = clean_text.replace('\t', '     ')
 
     #apends page into .txt file
     file = open('books/txts/'+name_of_book+'.txt', 'a')
+    file.write(clean_title)
     file.write(clean_text)
     file.close
     
