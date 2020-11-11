@@ -1,4 +1,4 @@
-Created this script to get a book from 2novels.net.
+Created this script to get a book from 2novels.net works for fullbooks.net/ as well.
 
 Installation
 ```
