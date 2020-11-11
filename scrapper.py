@@ -24,9 +24,11 @@ name_of_book = data[1]
 
 #gets the important numbers of the url
 info = (data[2].replace(".html","")).split("-")
-
-hash_number = int(info[3]) -1
-page_1 = int(info[0])
+try:
+    hash_number = int(info[3]) -1
+    page_1 = int(info[0])
+except IndexError:
+    print('Check the url it probably needs an index adjustment')
 
 total_pages = int(input("Insert the total of pages:"))
 
