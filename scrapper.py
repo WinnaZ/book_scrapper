@@ -11,24 +11,28 @@ book = ""
 #quote_page = 'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html'
 
 #asks for the url of the book
-quote_page = input("Insert the URL on the fisrt page, example:'http://fullbooks.net/a-court-of-mist-and-fury/page-1-1076467.html': \n")
+quote_page = input("Insert the URL on the fisrt page, example:'https://novel22.net/a-court-of-thorns-and-roses/page-1-1076370.html': \n")
 
 #parses the url to get information out
 url = urllib_request.urlparse(quote_page)
 data = url.path.split("/")
-#This url is not as generic as i would like,
-# the info will need to be reajusted depending on each url
 
-#get the book name out of data
-name_of_book = data[1]
-
-#gets the important numbers of the url
-info = (data[2].replace(".html","")).split("-")
 try:
-    hash_number = int(info[3]) -1
-    page_1 = int(info[0])
-except IndexError:
+    #This url is not as generic as i would like,
+    # the info will need to be reajusted depending on each url
+
+    #get the book name out of data
+    name_of_book = data[1]
+
+    #gets the important numbers of the url
+    info = (data[2].replace(".html","")).split("-")
+
+    hash_number = int(info[2]) -1
+    page_1 = int(info[1])
+except IndexError as e:
+    print('FATAL ERROR:',e)
     print('Check the url it probably needs an index adjustment')
+    exit()
 
 total_pages = int(input("Insert the total of pages:"))
 
